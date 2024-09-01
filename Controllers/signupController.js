@@ -30,3 +30,9 @@ exports.postsignup=async(req,res,next)=>{
     }
  
 }
+exports.getlogin=(req,res,next)=>{
+    res.sendFile(path.join(__dirname,'..','/public/views/login.html'))
+}
+exports.postlogin=(req,res,next)=>{
+    console.log("yes")
+}
