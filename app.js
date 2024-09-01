@@ -9,6 +9,8 @@ const corsoptions={
 }
 app.use(cors(corsoptions))
 app.use(bodyparser.urlencoded({extended:true}))
+
+app.use(bodyparser.json());
 require('dotenv').config();
 const path= require('path')
 const PORT= process.env.PORT||5000
