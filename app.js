@@ -2,6 +2,12 @@ const express= require('express')
 const bodyparser= require('body-parser')
 const signuproute=require('./Routes/signupRoute')
 const app=express()
+const cors=require('cors')
+const corsoptions={
+    origin: 'http://localhost:3000',
+    methods: 'GET,POST,PUT,DELETE'
+}
+app.use(cors(corsoptions))
 app.use(bodyparser.urlencoded({extended:true}))
 require('dotenv').config();
 const path= require('path')
