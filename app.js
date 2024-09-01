@@ -1,13 +1,15 @@
 const express= require('express')
 const bodyparser= require('body-parser')
+const signuproute=require('./Routes/signupRoute')
+const app=express()
+app.use(bodyparser.urlencoded({extended:true}))
 require('dotenv').config();
 const path= require('path')
 const PORT= process.env.PORT||5000
-const app=express()
+
+
 app.use(express.static('public'))
-app.get('/',(req,res,next)=>{
-    res.sendFile(path.join(__dirname,'public/views/signup.html'))
-})
+app.use(signuproute)
 app.listen(PORT,()=>{
     console.log("server is running")
 })
