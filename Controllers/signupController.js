@@ -6,11 +6,16 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 exports.home=(req,res,next)=>{
     res.sendFile(path.join(__dirname,'..','public/views/signup.html'))
+   // res.sendFile(path.join(__dirname, '..', 'public', 'views', 'chatdisplay.html'));
 }
 exports.postsignup=async(req,res,next)=>{
     try{
      
         const {username,email,password,number}=req.body
+        console.log("username",username)
+        console.log("username",email)
+        console.log("username",password)
+        console.log("username",number)
 
        const userexist=await User.findOne({where:{email:email}})
         if(userexist)
@@ -27,6 +32,7 @@ exports.postsignup=async(req,res,next)=>{
     }
     catch(e){
         console.log("something went wrong in signup ")
+        console.log("err in signup is ",e)
         res.status(500).json({ message: "Internal Server Error" });
     }
  
@@ -61,4 +67,23 @@ exports.postlogin=async(req,res,next)=>{
         res.status(500).json({ message: "Internal Server Error" });
     }
     
+}
+exports.display=(req,res,next)=>{
+    try{
+        res.sendFile(path.join(__dirname,'..','public/views/chatdisplay.html'))
+    }
+    catch(e){
+        console.log("err in display",e)
+    }
+
+}
+exports.users=async(req,res,next)=>{
+    try{
+
+        const users= await User.findAll()
+        res.status(201).json({users:users})
+    }
+    catch(e){
+        console.log(e)
+    }
 }

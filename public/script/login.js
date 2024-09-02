@@ -10,7 +10,9 @@ submitbtn.addEventListener('submit',(e)=>{
         email
     })  .then(response => {
         console.log(response.data);
-        alert('Login successful!');
+       alert('Login successful!');
+       
+       window.location.href = 'http://localhost:8000/display';
     })
     .catch(error => {
         console.error('There was a problem with the Axios request:', error);
