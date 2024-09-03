@@ -106,3 +106,20 @@ exports.sendmessage=async(req,res,next)=>{
     }
     
 }
+exports.msg=async (req,res,next)=>{
+    try{
+        const sender=req.user
+        const to=req.query.to
+        console.log(to)
+        console.log("sender is ",sender)
+        const sender_msgs= await Message.findAll({where:{sender_id:sender.id}})
+        const reciever_msg= await Message.findAll({where:{reciever_id:to}})
+      // console.log(sender_msgs)
+        console.log(reciever_msg)
+        res.json({sender_msgs:sender_msgs,reciever_msg:reciever_msg})
+    }
+    catch(e)
+    {
+        console.log(e)
+    }
+}

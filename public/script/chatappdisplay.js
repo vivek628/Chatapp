@@ -35,9 +35,18 @@ window.addEventListener('load', async function() {
             name.textContent = user.username;
             profile.appendChild(name);
 
-            profile.addEventListener('click', () => {
+            profile.addEventListener('click', async() => {
                 chatBox.classList.remove('hidden');
                 chatWith.textContent = `Chat with ${user.username}`;
+                
+                const msg = await axios.get('http://localhost:8000/msg', {
+                    params: {
+                      to: user.id // This sends 'to' as a query parameter
+                    },
+                    headers: {
+                      Authorization: `Bearer ${token}`
+                    }
+                  })
                 
             });
         });
@@ -59,7 +68,7 @@ window.addEventListener('load', async function() {
                     }
                 });
             
-
+               
                 
                 const messageElement = document.createElement('div');
                 messageElement.textContent = message;
