@@ -2,6 +2,7 @@ const express= require('express')
 const bodyparser= require('body-parser')
 const signuproute=require('./Routes/signupRoute')
 require('dotenv').config();
+
 const app=express()
 const cors=require('cors')
 const corsoptions={
@@ -12,7 +13,7 @@ app.use(cors(corsoptions))
 app.use(bodyparser.urlencoded({extended:true}))
 
 app.use(bodyparser.json());
-
+const messages= require('./models/messages')
 const path= require('path')
 const sequelize = require('./utils/db')
 const PORT= process.env.PORT||5000

@@ -9,9 +9,10 @@ submitbtn.addEventListener('submit',(e)=>{
         password,
         email
     })  .then(response => {
-        console.log(response.data);
+        
        alert('Login successful!');
-       
+       const token=response.data.token
+       localStorage.setItem('token',token)
        window.location.href = 'http://localhost:8000/display';
     })
     .catch(error => {

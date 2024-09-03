@@ -1,21 +1,19 @@
 const path=require('path')
 const User= require('../models/User')
+const Message=require('../models/messages')
 const jwt=require('jsonwebtoken')
 const { where } = require('sequelize')
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 exports.home=(req,res,next)=>{
     res.sendFile(path.join(__dirname,'..','public/views/signup.html'))
-   // res.sendFile(path.join(__dirname, '..', 'public', 'views', 'chatdisplay.html'));
+   
 }
 exports.postsignup=async(req,res,next)=>{
     try{
      
         const {username,email,password,number}=req.body
-        console.log("username",username)
-        console.log("username",email)
-        console.log("username",password)
-        console.log("username",number)
+      
 
        const userexist=await User.findOne({where:{email:email}})
         if(userexist)
@@ -70,6 +68,7 @@ exports.postlogin=async(req,res,next)=>{
 }
 exports.display=(req,res,next)=>{
     try{
+        
         res.sendFile(path.join(__dirname,'..','public/views/chatdisplay.html'))
     }
     catch(e){
@@ -79,11 +78,31 @@ exports.display=(req,res,next)=>{
 }
 exports.users=async(req,res,next)=>{
     try{
-
+        const current_user=req.user.id
         const users= await User.findAll()
-        res.status(201).json({users:users})
+        const filteredUsers = users.filter(user => user.id !== current_user);
+        res.status(201).json({users:filteredUsers})
     }
     catch(e){
         console.log(e)
     }
+}
+exports.sendmessage=async(req,res,next)=>{
+    try{
+        const { to, message } = req.body;
+
+        console.log('Recipient:', to);
+        console.log('Message:', message);
+        console.log(req.user)
+        
+        const reciever= await User.findOne({where:{username:to}})
+        const  reciever_id=reciever.id
+        await Message.create({sender_id:req.user.id,reciever_id:reciever_id,message:message})
+        res.json({message:'ok'})
+    }
+    catch(E)
+    {
+        console.log("err in ",E)
+    }
+    
 }
