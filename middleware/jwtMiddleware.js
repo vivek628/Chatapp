@@ -21,7 +21,7 @@ exports.userid = (req, res, next) => {
             console.log("Error verifying token:", err);
             return res.status(403).json({ message: 'Forbidden: Invalid token' });
         } else {
-            console.log("Token verified:", result);
+            
             req.user = result; 
             next();
         }

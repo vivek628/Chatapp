@@ -1,12 +1,12 @@
 const {DataTypes}= require('sequelize')
 const sequelize= require('../utils/db')
 const messages=  sequelize.define('Message',{
-    sender_id:{
-        type:DataTypes.INTEGER,
+    sender_name:{
+        type:DataTypes.STRING,
         allowNull:false
     },
-    reciever_id:{
-        type:DataTypes.INTEGER,
+    reciever_name:{
+        type:DataTypes.STRING,
         allowNull:false
     },
     message:{

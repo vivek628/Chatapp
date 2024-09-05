@@ -3,6 +3,7 @@ const User= require('../models/User')
 const Message=require('../models/messages')
 const jwt=require('jsonwebtoken')
 const { where } = require('sequelize')
+const Sequelize=require('sequelize')
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 exports.home=(req,res,next)=>{
@@ -47,7 +48,7 @@ exports.postlogin=async(req,res,next)=>{
        const ismatch=await bcrypt.compare(password,user.password)
        if(ismatch)
        { 
-        const token= jwt.sign({ id: user.id, email: user.email }, process.env.MY_SECRET_KEY)
+        const token= jwt.sign({ id: user.id, email: user.email, name:user.username}, process.env.MY_SECRET_KEY)
         res.status(200).json({message:"LOGIN SUCCESSFUL",token:token})
        }
        else{
@@ -97,7 +98,7 @@ exports.sendmessage=async(req,res,next)=>{
         
         const reciever= await User.findOne({where:{username:to}})
         const  reciever_id=reciever.id
-        await Message.create({sender_id:req.user.id,reciever_id:reciever_id,message:message})
+        await Message.create({sender_name:req.user.name,reciever_name:to,message:message})
         res.json({message:'ok'})
     }
     catch(E)
@@ -110,12 +111,17 @@ exports.msg=async (req,res,next)=>{
     try{
         const sender=req.user
         const to=req.query.to
+        const lastid=req.query.lastid
         console.log(to)
-        console.log("sender is ",sender.id)
-        
-        const all_msgs= await Message.findAll()
+        console.log("sender is ",sender.name)
+        console.log(lastid)
+        const all_msgs= await Message.findAll({where: {
+            id: {
+              [Sequelize.Op.gt]: lastid 
+            }
+          }, attributes:['message','sender_name','id']})
       
-      
+        console.log("msg are",all_msgs)
         res.json({all_msgs:all_msgs})
     }
     catch(e)

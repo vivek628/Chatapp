@@ -36,25 +36,48 @@ window.addEventListener('load', async function() {
             profile.appendChild(name);
 
             profile.addEventListener('click', async() => {
+
                 chatBox.classList.remove('hidden');
                 chatWith.textContent = `Chat with ${user.username}`;
+               
+                if(localStorage.getItem('allmsg')=='')
+                {
+                    
+                    localStorage.setItem('allmsg',JSON.stringify([]))
+                    var lastid= 0
+                }
+                
+
                 setInterval(async()=>{
+                    
                     messages.innerHTML=''
                     const resposne = await axios.get('http://localhost:8000/msg', {
                         params: {
-                          to: user.id 
+                          to: user.username ,
+                          lastid:lastid
                         },
                         headers: {
                           Authorization: `Bearer ${token}`
                         }
                       })
                       console.log(resposne.data.all_msgs)
-                      resposne.data.all_msgs.forEach(msg=>{
-                        console.log(msg.message)
+
+                      console.log(resposne.data.all_msgs.length,"this is len")
+                      const newmsg=resposne.data.all_msgs
+                      
+                      const oldmsg=JSON.parse(localStorage.getItem('allmsg'))
+                      
+                      localStorage.setItem('allmsg',JSON.stringify(oldmsg.concat(newmsg)))
+                      
+                      lastid=JSON.parse(localStorage.getItem('allmsg')).length
+                     
+                    
+                      JSON.parse(localStorage.getItem('allmsg')).forEach(msg=>{
+                       
                        
                         const messageElement = document.createElement('div');
-                        
-                     messageElement.textContent = msg.message;
+                        const messageString = JSON.stringify(msg);
+                     messageElement.textContent = messageString ;
                      messages.appendChild(messageElement);
                    
                       })
@@ -85,8 +108,8 @@ window.addEventListener('load', async function() {
                
                 
                 const messageElement = document.createElement('div');
-                messageElement.textContent = message;
-                messages.appendChild(messageElement);
+               // messageElement.textContent = message;
+                //messages.appendChild(messageElement);
 
                 
                 messageInput.value = '';
