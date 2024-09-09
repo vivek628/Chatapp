@@ -10,6 +10,7 @@
 <body>
     <div class="main">
         <h1>CHAT APP</h1>
+        <button class="groupbtn" id="groupbtn">CREAT GROUP</button>
         <div class="container">
             <div class="box" id="profiles">
                 
@@ -32,6 +33,20 @@
             <button id="sendMessage">Send</button>
         </div>
     </div>
+    <div class="body">
+    <div id="box" style="display: none;">
+        <h2>Select Users to Create Group</h2>
+        <input placeholder="ENTER GROUP NAME" style="padding: 6px; margin-top: 10px; width: 50%;" id="groupname">
+        <ul class="userlist" id="userlist"></ul>
+        <button id="createGroup">Create Group</button>
+        
+        <div id="groupOutput"></div>
+    </div>
+    <div class="startgroupchat" id="startgroupchat">
+        <button id="showgroup">GROUPS</button>
+        <button id="test">testbtn</button>
+    </div>
+    </div>
 </body>
-<script src="../script/chatappdisplay.js"></script>
+<script src="script/chatappdisplay.js"></script>
 </html>

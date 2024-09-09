@@ -6,6 +6,8 @@
 
 body {
     font-family: Arial, sans-serif;
+    overflow: hidden;
+    display: flex;
 }
 
 .main {
@@ -148,4 +150,81 @@ h1 {
     padding: 10px;
     margin-left: 10px;
     cursor: pointer;
+}
+.groupbtn{
+    background-color:blue;
+   
+    color: white;
+    border: none;
+    padding: 15px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+.userlist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.userlist li {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+.userlist input[type="checkbox"] {
+    margin-right: 10px;
+}
+.user {
+    font-size: 16px;
+    color: #333;
+}
+#createGroup {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+#createGroup:hover {
+    background-color: #0056b3;
+}
+#groupOutput {
+    margin-top: 10px;
+    font-size: 16px;
+}
+#box{
+    padding: 0px;
+    margin: 0px;
+    height: 100vh;
+    width: 50vw;
+    margin-left: 40px;
+    margin-top: 40px;
+    
+}
+.body{background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+}
+.startgroupchat{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    
+}
+.startgroupchat button{
+    background-color:blue;
+   
+    color: white;
+    border: none;
+    padding: 15px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 1rem;
 }

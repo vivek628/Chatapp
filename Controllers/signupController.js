@@ -80,9 +80,13 @@ exports.display=(req,res,next)=>{
 exports.users=async(req,res,next)=>{
     try{
         const current_user=req.user.id
+        const current_user_name=req.user.name
+        console.log(current_user_name)
+        console.log(req.user.name)
+        
         const users= await User.findAll()
         const filteredUsers = users.filter(user => user.id !== current_user);
-        res.status(201).json({users:filteredUsers})
+        res.status(201).json({users:filteredUsers,current_user_name:current_user_name})
     }
     catch(e){
         console.log(e)
@@ -98,7 +102,7 @@ exports.sendmessage=async(req,res,next)=>{
         
         const reciever= await User.findOne({where:{username:to}})
         const  reciever_id=reciever.id
-        await Message.create({sender_name:req.user.name,reciever_name:to,message:message})
+        await Message.create({senderId:req.user.id,receiverId:reciever_id,message:message})
         res.json({message:'ok'})
     }
     catch(E)
@@ -112,20 +116,26 @@ exports.msg=async (req,res,next)=>{
         const sender=req.user
         const to=req.query.to
         const lastid=req.query.lastid
-        console.log(to)
+        console.log("to",to)
         console.log("sender is ",sender.name)
-        console.log(lastid)
+      
         const all_msgs= await Message.findAll({where: {
+            receiverId:to, 
             id: {
               [Sequelize.Op.gt]: lastid 
             }
-          }, attributes:['message','sender_name','id']})
+          } })
       
-        console.log("msg are",all_msgs)
+       
         res.json({all_msgs:all_msgs})
     }
     catch(e)
     {
         console.log(e)
     }
+}
+exports.allusers=async(req,res,next)=>{
+    allusers=await User.findAll()
+   
+    res.json({allusers:allusers})
 }

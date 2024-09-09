@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group List</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="style/group.css">
+</head>
+<body>
+    <div class="group-list">
+        
+    </div>
+    <div id="chatBox" class="chat-box hidden">
+        <div class="chat-header">
+            <div class="dp"></div>
+            <span id="chatWith"></span>
+            <button id="closeChat">Close</button>
+        </div>
+        <div id="messages" class="messages">
+           
+        </div>
+        <div class="chat-footer">
+            <input id="messageInput" type="text" placeholder="Type your message here">
+            <button id="sendMessage">Send</button>
+        </div>
+    </div>
+    <script src="script/groups.js"></script>
+</body>
+</html>
