@@ -1,5 +1,6 @@
 window.addEventListener('load', async function() {
-    let setintervalid;
+    const socket = io();
+    let setIntervalid;
 
     try {
         const token = localStorage.getItem('token');
@@ -42,19 +43,21 @@ window.addEventListener('load', async function() {
             profile.appendChild(name);
 
             profile.addEventListener('click', async () => {
-                if (setintervalid !== undefined) {
-                    clearInterval(setintervalid);
+                if (setIntervalid !== undefined) {
+                    clearInterval(setIntervalid);
                 }
 
                 chatBox.classList.remove('hidden');
                 chatWith.textContent = `Chat with ${user.username}`;
 
-                if (localStorage.getItem('allmsg') === null) {
+                if (!localStorage.getItem('allmsg')) {
                     localStorage.setItem('allmsg', JSON.stringify([]));
                 }
                 let lastid = JSON.parse(localStorage.getItem('allmsg')).length;
 
-                setintervalid = setInterval(async () => {
+                // Handle incoming messages for the selected user
+                socket.off('message');
+                socket.on('message', async (message) => {
                     messages.innerHTML = '';
                     try {
                         const response = await axios.get('http://localhost:8000/msg', {
@@ -79,7 +82,7 @@ window.addEventListener('load', async function() {
                     } catch (error) {
                         console.error('Error fetching messages:', error);
                     }
-                }, 1000);
+                });
             });
         });
 
@@ -88,8 +91,11 @@ window.addEventListener('load', async function() {
             if (message === '') return;
 
             try {
+                const recipient = chatWith.textContent.replace('Chat with ', '');
+                socket.emit('user-message', { recipient, message });
+
                 await axios.post('http://localhost:8000/sendMessage', {
-                    to: chatWith.textContent.replace('Chat with ', ''),
+                    to: recipient,
                     message: message
                 }, {
                     headers: { 'Authorization': `Bearer ${token}` }
@@ -107,78 +113,5 @@ window.addEventListener('load', async function() {
 
     } catch (error) {
         console.error('Error fetching users:', error);
-    }
-});
-
-// Group creation logic
-document.getElementById('groupbtn').addEventListener('click', async () => {
-    const token= localStorage.getItem('token')
-    try {
-        const userslist = await axios.get('http://localhost:8000/users',{
-            headers:{
-                Authorization:`Bearer ${token}`
-            }
-        });
-      
-        const current_user=userslist.data.current_user_name
-        const users = userslist.data.users;
-
-        document.getElementById('groupbtn').style.display = 'none';
-        document.getElementsByClassName('main')[0].style.width = '50%';
-        document.getElementById('box').style.display = 'block';
-
-        const ul = document.getElementById('userlist');
-        users.forEach(user => {
-            const li = document.createElement('li');
-
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.value = user.username;
-            checkbox.className = 'user-checkbox';
-
-            const label = document.createElement('label');
-            label.textContent = user.username;
-            label.className = 'user';
-
-            li.appendChild(checkbox);
-            li.appendChild(label);
-            ul.appendChild(li);
-        });
-
-        document.getElementById('createGroup').addEventListener('click', async () => {
-            const selectedUsers = Array.from(document.querySelectorAll('.user-checkbox:checked')).map(cb => cb.value);
-            const groupOutput = document.getElementById('groupOutput');
-            selectedUsers.push(current_user)
-            console.log(selectedUsers)
-            const token=localStorage.getItem('token')
-
-            if (selectedUsers.length > 0) {
-                groupOutput.textContent = `Group Created with users: ${selectedUsers.join(', ')}`;
-                const groupname = document.getElementById('groupname').value;
-
-                await axios.get('http://localhost:8000/creategroup', {
-                    params: { groupname: groupname, members: selectedUsers },
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                
-
-                alert("Group created");
-                window.location.reload();
-            } else {
-                groupOutput.textContent = 'No users selected. Please select users to create a group.';
-                alert("No user selected");
-            }
-        });
-
-    } catch (error) {
-        console.error('Error fetching all users:', error);
-    }
-});
-
-document.getElementById('test').addEventListener('click', async () => {
-    try {
-        await axios.get('http://localhost:8000/test');
-    } catch (error) {
-        console.error('Error fetching test endpoint:', error);
     }
 });

@@ -1,4 +1,7 @@
 const express = require('express');
+const http=require('http')
+const {Server}=require('socket.io')
+
 const bodyparser = require('body-parser');
 const signuproute = require('./Routes/signupRoute');
 const grouproute = require('./Routes/groupRoute');
@@ -47,10 +50,17 @@ app.use(grouproute);
 
 const sequelize = require('./utils/db');
 const PORT = process.env.PORT || 5000;
-
+const server=http.createServer(app)
+const io= new Server(server)
+io.on('connection',(socket)=>{
+  console.log("user created ",socket.id)
+  socket.on('user-message',(message)=>{
+    io.emit('message',message)
+  })
+})
 sequelize.sync()
   .then(() => {
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
   })
