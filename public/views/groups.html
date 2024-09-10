@@ -13,12 +13,20 @@
     </div>
     <div id="chatBox" class="chat-box hidden">
         <div class="chat-header">
+            <div id="adminaction"></div>
             <div class="dp"></div>
             <span id="chatWith"></span>
             <button id="closeChat">Close</button>
         </div>
         <div id="messages" class="messages">
-           
+        </div>
+        <div id="box" style="display: none;">
+            <h2>Select Users to Remove From  Group</h2>
+              
+            <ul class="userlist" id="userlist"></ul>
+            <button id="createGroup">Remove user</button>
+            
+            <div id="groupOutput"></div>
         </div>
         <div class="chat-footer">
             <input id="messageInput" type="text" placeholder="Type your message here">

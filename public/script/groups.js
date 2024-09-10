@@ -38,8 +38,12 @@ window.onload = async function() {
 
             groupItem.addEventListener('click', async () => {
                 const groupmembers = await axios.get('http://localhost:8000/members', {
-                    params: { groupid: group.id }
+                    params: { groupid: group.id },headers:{
+                     'Authorization': `Bearer ${token}`
+                    }
                 });
+                const isAdmin=groupmembers.data.isAdmin
+               
 
                 const groupmsgs = await axios.get('http://localhost:8000/getgroupmsg', {
                     params: { groupid: group.id }
@@ -59,6 +63,70 @@ window.onload = async function() {
 
                 const memberBox = document.getElementById('chatWith');
                 memberBox.innerText = groupmembers.data.groups.join(',');
+                
+                if(isAdmin)
+
+                {   
+                    const notdmin=await axios('http://localhost:8000/notadmin',{
+                        params:{groupid:group.id}
+                    })
+                    const username=notdmin.data.usernames
+                    const action=document.getElementById('adminaction')
+                    action.innerHTML=''
+                   const btn=document.createElement('button')
+                   btn.innerText='Remove User'
+                  
+                   action.appendChild(btn)
+                   action.addEventListener('click',async()=>{
+                   
+                    const chatBox=document.getElementById('box')
+                    chatBox.style.display='block'
+                    const ul = document.getElementById('userlist');
+                    
+                    username.forEach(u => {
+                      
+                        const li = document.createElement('li');
+            
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.value = u;
+                        checkbox.className = 'user-checkbox';
+            
+                        const label = document.createElement('label');
+                        label.textContent =u ;
+                        label.className = 'user';
+            
+                        li.appendChild(checkbox);
+                        li.appendChild(label);
+                        ul.appendChild(li);
+                    });
+                   })
+                   document.getElementById('createGroup').addEventListener('click', async () => {
+                    const selectedUsers = Array.from(document.querySelectorAll('.user-checkbox:checked')).map(cb => cb.value);
+                    const groupOutput = document.getElementById('groupOutput');
+                 
+                  
+                    
+        
+                    if (selectedUsers.length > 0) {
+                       
+                       
+                        await axios.get('http://localhost:8000/creatadmin', {
+                            params: {members: selectedUsers }
+                           
+                        });
+                        
+        
+                        alert(`${selectedUsers.join(',')} Remove From Group`);
+                        window.location.reload();
+                    } else {
+                        groupOutput.textContent = 'No users selected.'
+                        alert("No user selected");
+                    }
+                });
+        
+                }
+                
 
                 document.getElementById('chatBox').classList.remove('hidden');
 

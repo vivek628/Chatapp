@@ -150,14 +150,17 @@ document.getElementById('groupbtn').addEventListener('click', async () => {
             const groupOutput = document.getElementById('groupOutput');
             selectedUsers.push(current_user)
             console.log(selectedUsers)
+            const token=localStorage.getItem('token')
 
             if (selectedUsers.length > 0) {
                 groupOutput.textContent = `Group Created with users: ${selectedUsers.join(', ')}`;
                 const groupname = document.getElementById('groupname').value;
 
                 await axios.get('http://localhost:8000/creategroup', {
-                    params: { groupname: groupname, members: selectedUsers }
+                    params: { groupname: groupname, members: selectedUsers },
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
+                
 
                 alert("Group created");
                 window.location.reload();
