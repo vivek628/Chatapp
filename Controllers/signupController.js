@@ -6,6 +6,11 @@ const { where } = require('sequelize')
 const Sequelize=require('sequelize')
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+require('dotenv').config();
+const ACCESKEYID=process.env.ACCESKEYID
+const SECRETACCESSKEY=process.env.SECRETACCESSKEY
 exports.home=(req,res,next)=>{
     res.sendFile(path.join(__dirname,'..','public/views/signup.html'))
    
@@ -138,4 +143,33 @@ exports.allusers=async(req,res,next)=>{
     allusers=await User.findAll()
    
     res.json({allusers:allusers})
+}
+exports.userfile=async(req,res,next)=>{
+    const s3client = new S3Client({
+        region: 'eu-north-1',
+        credentials: {
+            accessKeyId: ACCESKEYID,
+            secretAccessKey: SECRETACCESSKEY
+        }
+    });
+    const { fileName, contentType } = req.body;
+
+    if (!fileName || !contentType) {
+        return res.status(400).json({ error: 'File name and content type are required.' });
+    }
+
+    try {
+        const command = new PutObjectCommand({
+            Bucket: 'chatwithvivek',
+            Key: `upload/useruploads/${fileName}`,
+            ContentType: contentType
+        });
+
+        const signedUrl = await getSignedUrl(s3client, command,); // URL valid for 15 minutes
+        res.json({ uploadUrl: signedUrl });
+    } catch (error) {
+        console.error('Error generating signed URL:', error);
+        res.status(500).json({ error: 'Error generating signed URL' });
+    }
+    
 }

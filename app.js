@@ -10,7 +10,7 @@ require('dotenv').config();
 const app = express();
 const cors = require('cors');
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: 'http://localhost:8000',
   methods: 'GET,POST,PUT,DELETE'
 };
 

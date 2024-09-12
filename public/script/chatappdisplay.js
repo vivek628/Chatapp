@@ -55,7 +55,7 @@ window.addEventListener('load', async function() {
                 }
                 let lastid = JSON.parse(localStorage.getItem('allmsg')).length;
 
-                // Handle incoming messages for the selected user
+               
                 socket.off('message');
                 socket.on('message', async (message) => {
                     messages.innerHTML = '';
@@ -110,7 +110,40 @@ window.addEventListener('load', async function() {
         closeChat.addEventListener('click', () => {
             chatBox.classList.add('hidden');
         });
+        document.getElementById('uploadForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const fileInput = document.getElementById('fileUpload');
+            console.log(fileInput)
+            const file = fileInput.files[0];
 
+            if (!file) {
+                alert('Please select a file');
+                return;
+            }
+
+          
+            try {
+                const response = await axios.post('http://localhost:8000/uploadfile', {
+                    fileName: file.name,
+                    contentType: file.type
+                });
+
+                const uploadUrl = response.data.uploadUrl;
+
+                
+                await axios.put(uploadUrl, file, {
+                    headers: {
+                        'Content-Type': file.type
+                    }
+                });
+
+                alert('File uploaded successfully');
+            } catch (error) {
+                console.error('Error uploading file:', error);
+                alert('Upload failed');
+            }
+        });
     } catch (error) {
         console.error('Error fetching users:', error);
     }

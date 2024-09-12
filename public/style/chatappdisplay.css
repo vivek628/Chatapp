@@ -9,6 +9,12 @@ body {
     overflow: hidden;
     display: flex;
 }
+form {
+    margin: 20px;
+}
+input[type="file"] {
+    margin-bottom: 10px;
+}
 
 .main {
     height: 100vh;
