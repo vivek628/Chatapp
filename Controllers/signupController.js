@@ -72,8 +72,10 @@ exports.postlogin=async(req,res,next)=>{
     }
     
 }
-exports.display=(req,res,next)=>{
+exports.display=async(req,res,next)=>{
+
     try{
+        
         
         res.sendFile(path.join(__dirname,'..','public/views/chatdisplay.html'))
     }
@@ -121,9 +123,7 @@ exports.msg=async (req,res,next)=>{
         const sender=req.user
         const to=req.query.to
         const lastid=req.query.lastid
-        console.log("to",to)
-        console.log("sender is ",sender.name)
-      
+       
         const all_msgs= await Message.findAll({where: {
             receiverId:to, 
             id: {

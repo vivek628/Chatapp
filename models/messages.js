@@ -8,3 +8,4 @@ const messages=  sequelize.define('Message',{
     }
 })
  module.exports=messages
+ 

@@ -24,6 +24,7 @@ const Message = require('./models/messages');
 const Group = require('./models/group');
 const GroupChat = require('./models/groupchat');
 const UserGroups = require('./models/usergroup');
+const archievechat=require('./models/archievechat')
 
 
 User.hasMany(Message, { foreignKey: 'senderId' });
@@ -50,10 +51,11 @@ app.use(grouproute);
 
 const sequelize = require('./utils/db');
 const PORT = process.env.PORT || 5000;
+require('./chrone')
 const server=http.createServer(app)
 const io= new Server(server)
 io.on('connection',(socket)=>{
-  console.log("user created ",socket.id)
+  
   socket.on('user-message',(message)=>{
     io.emit('message',message)
   })
